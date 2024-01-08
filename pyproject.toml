@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "finroberta"
+version = "0.1.0"
+description = ""
+authors = ["RalfKellner <ralf.kellner@uni-passau.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bs4 = "^0.0.1"
+nltk = "^3.8.1"
+pandas = "^2.1.4"
+tqdm = "^4.66.1"
+numpy = "^1.26.3"
+datasets = "^2.16.1"
+transformers = "^4.36.2"
+torch = "^2.1.2"
+tokenizers = "^0.15.0"
+ipykernel = "^6.28.0"
+ipywidgets = "^8.1.1"
+jupyter = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
