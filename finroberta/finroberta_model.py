@@ -186,7 +186,7 @@ class FinRobertaDataSet():
             else:
                 batch = cursor_esg.fetchmany(self.batch_size)
             if not(batch):
-                print(f"Removing table: {rnd_table_name}")
+                print(f"\nRemoving table: {rnd_table_name}")
                 table_names.remove(rnd_table_name)
                 table_probabilities = [self.table_infos[table_name]["use_prob"] for table_name in table_names]
                 table_probabilities = table_probabilities / np.sum(table_probabilities)
