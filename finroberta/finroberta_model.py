@@ -120,6 +120,8 @@ class FinRobertaDataSet():
             limit_input = int(input())
             if limit_input > self.table_infos[table_name]['n_obs']:
                 raise ValueError("Limit must be smaller than the amount of available text sequences.")
+            if limit_input < self.batch_size:
+                raise ValueError("Limit must be set at least to one batch size if you want to use this dataset.")
             self.table_infos[table_name]["limit"] = limit_input
         self._set_catch_batch_probabilities()
 

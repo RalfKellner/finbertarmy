@@ -10,7 +10,7 @@ def json_save(count_dict: dict, filename: str) -> None:
         js.write(json_out)
 
 
-tokenizer = FinRobertaTokenizer("./dicts_and_tokenizers/finroberta_tokenizer.json")
+tokenizer = FinRobertaTokenizer("./dicts_and_tokenizers/finroberta_tokenizer_wo_punctuation.json")
 count_dict_10k, count_dict_ec, count_dict_esg, count_dict_finance_corpus = dict(), dict(), dict(), dict()  
 for i in range(tokenizer.vocab_size):
     count_dict_10k[i] = 0
@@ -23,7 +23,7 @@ json_esg = "/Users/ralfkellner/Data/Textdata/ESG_reports.json"
 table_name_10k_in = "k_reports_full"
 table_name_ec_in = "earningcalls"
 
-db_out = "/Users/ralfkellner/Data/Textdata/FinRobertaTextsProcessed.sqlite"
+db_out = "/Users/ralfkellner/Data/Textdata/FinRobertaTextsProcessed_wo_punctuation.sqlite"
 table_name_10k_out = "k_report_sequences"
 table_name_ec_out = "ec_sequences"
 table_name_esg_out = "esg_sequences"
@@ -110,9 +110,9 @@ for i in range(tokenizer.vocab_size):
     count_dict_esg[i] = int(count_dict_esg[i])
     count_dict_finance_corpus[i] = count_dict_10k[i] + count_dict_ec[i] + count_dict_esg[i]
 
-json_save(count_dict_10k, "./dicts_and_tokenizers/token_counts_10k.json")
-json_save(count_dict_ec, "./dicts_and_tokenizers/token_counts_ec.json")
-json_save(count_dict_esg, "./dicts_and_tokenizers/token_counts_esg.json")
-json_save(count_dict_finance_corpus, "./dicts_and_tokenizers/token_counts_finance_corpus.json")
+json_save(count_dict_10k, "./dicts_and_tokenizers/token_counts_10k_wo_punctuation.json")
+json_save(count_dict_ec, "./dicts_and_tokenizers/token_counts_ec_wo_punctuation.json")
+json_save(count_dict_esg, "./dicts_and_tokenizers/token_counts_esg_wo_punctuation.json")
+json_save(count_dict_finance_corpus, "./dicts_and_tokenizers/token_counts_finance_corpus_wo_punctuation.json")
 
 print("Count dictionaries saved...all done!")

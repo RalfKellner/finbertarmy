@@ -1,3 +1,4 @@
+
 import os
 import json
 from transformers import RobertaConfig
@@ -9,6 +10,14 @@ import numpy as np
 import pandas as pd
 from finroberta.finroberta_model import FinRobertaTokenizer, FinRobertaDataSet
 
+
+def financial_masks(input_id_list: list[int], attention_mask_list: list[int], low_mask_pd: float = 0.025, high_mask_pd: float = 0.275) -> list[float]:
+    seq_len = np.sum(attention_mask_list)
+    mask_identifier = financial_mask_scores.loc[input_id_list].rank() < (seq_len / 2)
+    return mask_identifier.apply(lambda x: x * low_mask_pd + (1 - x) * high_mask_pd).values.flatten().tolist()
+
+financial_mask_scores = pd.read_csv("./dicts_and_tokenizers/financial_mask_scores.csv")
+financial_mask_scores.set_index("token_id", inplace = True)
 tokenizer = FinRobertaTokenizer("./dicts_and_tokenizers/finroberta_tokenizer.json")
 dataset = FinRobertaDataSet("/Users/ralfkellner/Data/Textdata/FinRobertaTextsProcessed.sqlite", shuffle_reports=False, batch_size = 32)
 dataset.set_limit_obs()
@@ -55,18 +64,22 @@ for i, rows in enumerate(loop):
     if i == 29:
         start_epoch_time_estimation = time()
 
-    # masking
+    # financial masking
     lines = [element[0]for element in rows]
-    inputs = tokenizer(lines, padding="max_length", max_length=252, truncation=True, return_tensors = "pt")
-    inputs["labels"] = inputs.input_ids.clone()
-    rand = torch.rand(inputs['input_ids'].shape)
-    mask_arr = (rand < 0.15) * (inputs['input_ids'] != 0) * (inputs['input_ids'] != 1) * (inputs['input_ids'] != 2) * (inputs['input_ids'] != 3)
-    inputs['input_ids'][mask_arr] = 4
+    inputs_raw = tokenizer(lines, padding="max_length", max_length=252, truncation=True)
+    inputs_pt = tokenizer(lines, padding="max_length", max_length=252, truncation=True, return_tensors = "pt")
+
+    mask = torch.Tensor(list(map(financial_masks, inputs_raw.input_ids, inputs_raw.attention_mask)))
+    rand = torch.rand(mask.shape)
+    mask_arr = rand < mask * (inputs_pt['input_ids'] != 0) * (inputs_pt['input_ids'] != 1) * (inputs_pt['input_ids'] != 2) * (inputs_pt['input_ids'] != 3)
+
+    inputs_pt["labels"] = inputs_pt.input_ids.clone()
+    inputs_pt['input_ids'][mask_arr] = 4
 
     optim.zero_grad()
-    input_ids = inputs['input_ids'].to(device)
-    attention_mask = inputs['attention_mask'].to(device)
-    labels = inputs['labels'].to(device)
+    input_ids = inputs_pt['input_ids'].to(device)
+    attention_mask = inputs_pt['attention_mask'].to(device)
+    labels = inputs_pt['labels'].to(device)
     outputs = model(input_ids = input_ids, attention_mask = attention_mask, labels = labels)
     loss = outputs.loss
     loss.backward()
@@ -87,7 +100,7 @@ end = time()
 print(f"Training took {end - start} seconds. Saving results...")
 
 # save results_to_model_path
-new_folder = f"finroberta_seq_len_{max_seq_length}_hidden_dim_{hidden_size}_nheads_{n_heads}_nlayers_{n_layers}"
+new_folder = f"finroberta_seq_len_{max_seq_length}_hidden_dim_{hidden_size}_nheads_{n_heads}_nlayers_{n_layers}_financial_mask"
 os.mkdir(os.path.join("trained_models", new_folder))
 os.chdir(os.path.join("trained_models", new_folder))
 
