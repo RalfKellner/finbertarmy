@@ -7,7 +7,7 @@ import json
 from tqdm import tqdm
 import numpy as np
 from datasets import load_dataset
-from .finroberta_model import FinRobertaTokenizer
+from .finbert_modeling import FinTokenizer
 
 
 class CorpusProcessor:

@@ -1,7 +1,7 @@
 import json
 import sqlite3
-from finroberta.finroberta_model import FinRobertaTokenizer
-from finroberta.utils import WikiProcessor
+from finbertarmy.finbert_modeling import FinTokenizer
+from finbertarmy.utils import WikiProcessor
 
 
 def json_save(count_dict: dict, filename: str) -> None:
@@ -12,7 +12,7 @@ def json_save(count_dict: dict, filename: str) -> None:
 db_out = "/Users/ralfkellner/Data/Textdata/WikiTextsProcessed_wo_punctuation.sqlite"
 table_name_out = "wiki_sequences"
 
-tokenizer = FinRobertaTokenizer("./dicts_and_tokenizers/finroberta_tokenizer_wo_punctuation.json")
+tokenizer = FinTokenizer("./dicts_and_tokenizers/finroberta_tokenizer_wo_punctuation.json")
 
 count_dict_wiki= dict()
 for i in range(tokenizer.vocab_size):

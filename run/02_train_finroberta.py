@@ -7,10 +7,10 @@ from time import time
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
-from finroberta.finroberta_model import FinRobertaTokenizer, FinRobertaDataSet
+from finbertarmy.finbert_modeling import FinTokenizer, FinDataSet
 
-tokenizer = FinRobertaTokenizer("./dicts_and_tokenizers/finroberta_tokenizer.json")
-dataset = FinRobertaDataSet("/Users/ralfkellner/Data/Textdata/FinRobertaTextsProcessed.sqlite", shuffle_reports=False, batch_size = 32)
+tokenizer = FinTokenizer("./dicts_and_tokenizers/finroberta_tokenizer.json")
+dataset = FinDataSet("/Users/ralfkellner/Data/Textdata/FinRobertaTextsProcessed.sqlite", shuffle_reports=True, batch_size = 32)
 dataset.set_limit_obs()
 
 all_sequences = 0
@@ -25,14 +25,14 @@ else:
     device = torch.device("cpu")
 
 max_seq_length = 252
-hidden_size = 768
+embedding_dim = 768
 n_heads = 12
 n_layers = 6
 
 config = RobertaConfig(
     vocab_size = tokenizer.vocab_size,  
     max_position_embeddings=max_seq_length + 2,
-    hidden_size=hidden_size,
+    hidden_size=embedding_dim,
     num_attention_heads=n_heads,
     num_hidden_layers=n_layers,
     type_vocab_size=1
@@ -87,7 +87,7 @@ end = time()
 print(f"Training took {end - start} seconds. Saving results...")
 
 # save results_to_model_path
-new_folder = f"finroberta_seq_len_{max_seq_length}_hidden_dim_{hidden_size}_nheads_{n_heads}_nlayers_{n_layers}"
+new_folder = f"finroberta_seq_len_{max_seq_length}_hidden_dim_{embedding_dim}_nheads_{n_heads}_nlayers_{n_layers}"
 os.mkdir(os.path.join("trained_models", new_folder))
 os.chdir(os.path.join("trained_models", new_folder))
 

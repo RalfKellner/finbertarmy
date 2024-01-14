@@ -1,5 +1,5 @@
-from finroberta.utils import KReportProcessor, EarningCallProcessor, ESGReportProcessor
-from finroberta.finroberta_model import FinRobertaTokenizer
+from finbertarmy.utils import KReportProcessor, EarningCallProcessor, ESGReportProcessor
+from finbertarmy.finbert_modeling import FinTokenizer
 import sqlite3
 from tqdm.notebook import tqdm
 import json
@@ -10,7 +10,7 @@ def json_save(count_dict: dict, filename: str) -> None:
         js.write(json_out)
 
 
-tokenizer = FinRobertaTokenizer("./dicts_and_tokenizers/finroberta_tokenizer_wo_punctuation.json")
+tokenizer = FinTokenizer("./dicts_and_tokenizers/finroberta_tokenizer_wo_punctuation.json")
 count_dict_10k, count_dict_ec, count_dict_esg, count_dict_finance_corpus = dict(), dict(), dict(), dict()  
 for i in range(tokenizer.vocab_size):
     count_dict_10k[i] = 0
