@@ -166,21 +166,24 @@ class FinDataSet():
             limit_query_10k = f"LIMIT {self.table_infos['k_report_sequences']['limit']}" if self.table_infos['k_report_sequences']['limit'] else None
             sql_query_10k = " ".join(filter(None, (base_query_10k, random_query, limit_query_10k))) + ";"
             cursor_10k.execute(sql_query_10k)
-            print("10K table has been shuffled.")
+            if self.shuffle_reports:
+                print("10K table has been shuffled.")
 
         if self.use_ec:
             base_query_ec = "SELECT * FROM ec_sequences"
             limit_query_ec = f"LIMIT {self.table_infos['ec_sequences']['limit']}" if self.table_infos['ec_sequences']['limit'] else None
             sql_query_ec = " ".join(filter(None, (base_query_ec, random_query, limit_query_ec))) + ";"
             cursor_ec.execute(sql_query_ec)
-            print("Earning call table has been shuffled.")
+            if self.shuffle_reports:
+                print("Earning call table has been shuffled.")
 
         if self.use_esg:
             base_query_esg = "SELECT * FROM esg_sequences"
             limit_query_esg = f"LIMIT {self.table_infos['esg_sequences']['limit']}" if self.table_infos['esg_sequences']['limit'] else None
             sql_query_esg = " ".join(filter(None, (base_query_esg, random_query, limit_query_esg))) + ";"
             cursor_esg.execute(sql_query_esg)  
-            print("ESG table has been shuffled.")      
+            if self.shuffle_reports:
+                print("ESG table has been shuffled.")      
 
         if self.shuffle_reports:
             print("...shuffling done. Starting with iteration.")

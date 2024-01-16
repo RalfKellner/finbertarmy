@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "finroberta"
+name = "finbertarmy"
 version = "0.1.0"
 description = ""
 authors = ["RalfKellner <ralf.kellner@uni-passau.de>"]
@@ -16,11 +16,14 @@ datasets = "^2.16.1"
 transformers = "^4.36.2"
 torch = "^2.1.2"
 tokenizers = "^0.15.0"
+matplotlib = "^3.8.2"
+evaluate = "^0.4.1"
+scikit-learn = "^1.3.2"
+
+[tool.poetry.group.dev.dependencies]
 ipykernel = "^6.28.0"
 ipywidgets = "^8.1.1"
 jupyter = "^1.0.0"
-matplotlib = "^3.8.2"
-
 
 [build-system]
 requires = ["poetry-core"]
